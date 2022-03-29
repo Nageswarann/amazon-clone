@@ -14,8 +14,10 @@ function Orders() {
         if(user) {
         const getOrders = async () => {
             const orders = await getDocs(ordersCollectionRef, {id: user?.uid})
-            console.log(orders.docs.map((doc)=> ({ ...doc.data(), id: doc.id})));
-            setOrders(orders.docs.map((doc)=> ({ ...doc.data(), id: doc.id})));
+            let allOrders = orders.docs.map((doc)=> ({ ...doc.data(), id: doc.id}))
+            let userOrdered = allOrders.filter((order)=> order.email == user?.email);
+            userOrdered.sort((a,b)=> (new Date(a.created?.seconds) > new Date(b.created?.seconds)));
+            setOrders(userOrdered);
         }
         getOrders();
     }else {

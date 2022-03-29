@@ -60,6 +60,7 @@ const handleSuccessCallback = async({paymentIntent}) => {
     await addDoc(ordersCollectionRef, {
         id: user?.uid, 
         basket: basket,
+        email: user?.email,
         amount: (paymentIntent?.amount)? paymentIntent?.amount: sumOfBasket,
         created: (paymentIntent?.created)? paymentIntent?.created: new Date()
     })
