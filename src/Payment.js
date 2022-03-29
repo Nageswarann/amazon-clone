@@ -7,6 +7,9 @@ import {Link, useNavigate } from "react-router-dom";
 import { useElements, useStripe, CardElement } from '@stripe/react-stripe-js';
 import CurrencyFormat from "react-currency-format"
 import axios from "./axios";
+import { db } from "./firebase";
+import { addDoc, collection } from "firebase/firestore/lite";
+
 
 function Payment() {
 const [{basket, user}, dispatch] = useStateValue();
@@ -35,26 +38,41 @@ useEffect(()=>{
 
 console.log("the secret", clientSecret);
 let sumOfBasket = basket?.reduce((sum, curr)=> sum+curr.price, 0);
+const userCollectionRef = collection(db, "users");
+const ordersCollectionRef = collection(db, "orders");
 
 const handleSubmit = async (e) => {
     e.preventDefault();
     setProcessing(true);
-
+    if(clientSecret === true) {
+        handleSuccessCallback({});
+    }
     const payload= await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
             card: elements.getElement(CardElement)
         }
-    }).then(({ paymentIntent })=>{
-        setSucceeded(true);
-        setError(null);
-        setProcessing(false);
-
-        dispatch({
-            type: "EMPTY_BASKET"
-        })
-
-        navigate('/orders');
+    }).then(async ({ paymentIntent })=>{
+        handleSuccessCallback({paymentIntent});
     })
+}
+
+const handleSuccessCallback = async({paymentIntent}) => {
+    await addDoc(ordersCollectionRef, {
+        id: user?.uid, 
+        basket: basket,
+        amount: (paymentIntent?.amount)? paymentIntent?.amount: sumOfBasket,
+        created: (paymentIntent?.created)? paymentIntent?.created: new Date()
+    })
+
+    setSucceeded(true);
+    setError(null);
+    setProcessing(false);
+
+    dispatch({
+        type: "EMPTY_BASKET"
+    })
+
+    navigate('/orders');
 }
 
 const handleChange = (e) => {
