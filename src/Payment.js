@@ -38,7 +38,6 @@ useEffect(()=>{
 
 console.log("the secret", clientSecret);
 let sumOfBasket = basket?.reduce((sum, curr)=> sum+curr.price, 0);
-const userCollectionRef = collection(db, "users");
 const ordersCollectionRef = collection(db, "orders");
 
 const handleSubmit = async (e) => {
@@ -104,9 +103,10 @@ const handleChange = (e) => {
             <h3>Review items and delivery</h3>
           </div>
           <div className="payment__items">
-            {basket.map((item) => (
+            {basket.map((item, i) => (
               <CheckoutProduct
                 id={item.id}
+                key={i}
                 title={item.title}
                 image={item.image}
                 price={item.price}

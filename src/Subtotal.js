@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 function Subtotal() {
     const navigate = useNavigate()
-    const [{basket}, dispatch] = useStateValue();
+    const [{basket},] = useStateValue();
     let sumOfBasket = basket?.reduce((sum, curr)=> sum+curr.price, 0);
   return (
     <div className="subtotal">

@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from "react"
 import "./Product.css"
 import { useStateValue } from "./StateProvider"
 
 function Product({id, title, image, price, rating}) {
   const [{basket}, dispatch] = useStateValue();
+  let [buttonTxt, setButtonTxt] = useState("Add to Cart");
   const addToBasket = () => {
     dispatch({
       type: "ADD_TO_BASKET",
@@ -17,6 +18,28 @@ function Product({id, title, image, price, rating}) {
     })
   }
 
+  const removeFromBasket = () => {
+    dispatch({
+        type:'REMOVE_FROM_BASKET',
+        id: id
+    })
+  }
+
+  const decrementCart = () => {
+    setButtonTxt(buttonTxt-1)
+    removeFromBasket();
+  }
+
+  const incrementCart = () => {
+    setButtonTxt(buttonTxt+1)
+    addToBasket();
+  }
+
+  const initiateCount = () => {
+    setButtonTxt(1);
+    addToBasket();
+  }
+
   return (
     <div className='product'>
         <div className='product__info'>
@@ -27,13 +50,17 @@ function Product({id, title, image, price, rating}) {
         </p>
         <div className='product__rating'>
             {Array(rating).fill().map((_,i)=>(
-                <p>⭐</p>
+                <p key={i}>⭐</p>
             ))}
             
         </div>
         </div>
         <img src={image} alt="" />
-        <button onClick={addToBasket}>Add to Basket</button>
+        <div className="button-group">
+        <button className='btn minus__button' onClick={decrementCart}> - </button>
+        <button className='btn main__button' onClick={initiateCount}>{buttonTxt}</button>
+        <button className='btn plus__button' onClick={incrementCart}> + </button>
+        </div>
     </div>
   )
 }

@@ -1,4 +1,3 @@
-import { orderBy } from 'firebase/firestore/lite'
 import React from 'react'
 import "./Order.css"
 import moment from "moment"
@@ -10,16 +9,17 @@ function Order({order}) {
     <div className="order">
       <h2>Order</h2>
       <p>
-        {order?.created != ""
+        {order?.created !== ""
           ? moment.unix(order.created).format("MMMM Do YYYY, h:mma")
           : ""}
       </p>
       <p className="order__id">
         <small>{order.id}</small>
       </p>
-      {order.basket?.map((item) => (
+      {order.basket?.map((item, i) => (
         <CheckoutProduct
           id={item.id}
+          key={i}
           title={item.title}
           image={item.image}
           price={item.price}
