@@ -43,6 +43,9 @@
     margin: 5px;
 }
 
-.minus__button, .plus__button {
+.show__button {
+    display: inline-block;
+}
+.hide__button {
     display: none;
 }

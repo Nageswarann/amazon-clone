@@ -5,6 +5,7 @@ import { useStateValue } from "./StateProvider"
 function Product({id, title, image, price, rating}) {
   const [{basket}, dispatch] = useStateValue();
   let [buttonTxt, setButtonTxt] = useState("Add to Cart");
+  let [showButton, setShowBtn] = useState(false)
   const addToBasket = () => {
     dispatch({
       type: "ADD_TO_BASKET",
@@ -26,7 +27,12 @@ function Product({id, title, image, price, rating}) {
   }
 
   const decrementCart = () => {
-    setButtonTxt(buttonTxt-1)
+    if(buttonTxt < 2){
+      setButtonTxt("Add to Cart");
+      setShowBtn(false)
+    } else {
+      setButtonTxt(buttonTxt-1)
+    }
     removeFromBasket();
   }
 
@@ -36,8 +42,11 @@ function Product({id, title, image, price, rating}) {
   }
 
   const initiateCount = () => {
-    setButtonTxt(1);
-    addToBasket();
+    if (buttonTxt === "Add to Cart") {
+      setButtonTxt(1);
+      setShowBtn(true);
+      addToBasket();
+    }
   }
 
   return (
@@ -57,9 +66,9 @@ function Product({id, title, image, price, rating}) {
         </div>
         <img src={image} alt="" />
         <div className="button-group">
-        <button className='btn minus__button' onClick={decrementCart}> - </button>
+        <button className={`btn ${(showButton)? 'show__button' : 'hide__button'}`} onClick={decrementCart}> - </button>
         <button className='btn main__button' onClick={initiateCount}>{buttonTxt}</button>
-        <button className='btn plus__button' onClick={incrementCart}> + </button>
+        <button className={`btn ${(showButton)? 'show__button': 'hide__button'}`} onClick={incrementCart}> + </button>
         </div>
     </div>
   )
