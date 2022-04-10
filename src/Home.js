@@ -11,6 +11,7 @@ import factfullness from "./images/factfullness.jpg"
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
+import Footer from './Footer';
 
 function Home() {
   return (<>
@@ -99,7 +100,7 @@ function Home() {
 
         </div>    
     </div>
-  
+        <Footer />
   </>
   )}
 
